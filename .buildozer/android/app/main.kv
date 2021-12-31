@@ -1,0 +1,77 @@
+<LWI>:
+    id: list_item
+
+    IconLeftWidget:
+        icon: root.iconImage
+
+    IconRightWidget:
+        icon: "trash-can-outline"
+        on_release: root.delete(list_item)
+    
+
+<Kv>:
+    url: url
+
+    id: main
+
+    cols: 1
+    rows: 11
+
+    padding: [50, 50, 50, 50]
+    spacing: [20, 0]
+
+
+    Label:
+        text: ''
+        size_hint_y: 10
+
+    MDTextField:
+        id: url
+        mode: 'rectangle'
+        size_hint_x: 100
+        hint_text: 'URL'
+
+    Label:
+        text: ''
+        size_hint_y: 5
+
+    MDRectangleFlatButton:
+        text: 'Download'
+        on_press: root.download()
+        size_hint_x: 100
+
+    Label:
+        text: ''
+        size_hint_y: 5
+
+    GridLayout:
+        cols: 3
+        rows: 1
+
+        Label:
+            text: ''
+            size_hint_x: 60
+
+        MDLabel:
+            text: 'Audio only'
+            theme_text_color: 'Secondary'
+            size_hint_x: 20
+
+        MDCheckbox:
+            on_press: root.changeType()
+            size_hint_x: 10
+    
+    Label:
+        text: ''
+        size_hint_y: 5
+
+    ScrollView:
+        do_scroll_x: True
+        size_hint_x: 100
+        size_hint_y: 80
+        MDList:
+            id: list
+
+    Label:
+        text: ''
+        size_hint_y: 10
