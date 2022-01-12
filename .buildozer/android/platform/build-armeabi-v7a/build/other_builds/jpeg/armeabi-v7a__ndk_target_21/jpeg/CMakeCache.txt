@@ -20,8 +20,8 @@ ANDROID_ABI:UNINITIALIZED=armeabi-v7a
 //No help, variable specified on the command line.
 ANDROID_ARM_NEON:UNINITIALIZED=ON
 
-//Build string (default: 20211220)
-BUILD:STRING=20211220
+//Build string (default: 20220109)
+BUILD:STRING=20220109
 
 //Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=/home/skrci/.buildozer/android/platform/android-ndk-r19c/toolchains/llvm/prebuilt/linux-x86_64/bin/arm-linux-androideabi-addr2line
@@ -545,7 +545,7 @@ CMAKE_RANLIB-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_READELF
 CMAKE_READELF-ADVANCED:INTERNAL=1
 //Path to CMake installation.
-CMAKE_ROOT:INTERNAL=/usr/share/cmake-3.22
+CMAKE_ROOT:INTERNAL=/usr/share/cmake
 //ADVANCED property for variable: CMAKE_SHARED_LINKER_FLAGS
 CMAKE_SHARED_LINKER_FLAGS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_SHARED_LINKER_FLAGS_DEBUG

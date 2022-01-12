@@ -17,6 +17,7 @@ __all__ = ('WindowSDL', )
 
 from os.path import join
 import sys
+from typing import Optional
 from kivy import kivy_data_dir
 from kivy.logger import Logger
 from kivy.base import EventLoop
@@ -144,12 +145,17 @@ class SDL2MotionEventProvider(MotionEventProvider):
 
 class WindowSDL(WindowBase):
 
+    _win_dpi_watch: Optional['_WindowsSysDPIWatch'] = None
+
     _do_resize_ev = None
+
+    managed_textinput = True
 
     def __init__(self, **kwargs):
         self._pause_loop = False
         self._win = _WindowSDL2Storage()
         super(WindowSDL, self).__init__()
+        self.titlebar_widget = None
         self._mouse_x = self._mouse_y = -1
         self._meta_keys = (
             KMOD_LCTRL, KMOD_RCTRL, KMOD_RSHIFT,
@@ -262,7 +268,13 @@ class WindowSDL(WindowBase):
             if not self.borderless:
                 self.fullscreen = self._fake_fullscreen = False
             elif not self.fullscreen or self.fullscreen == 'auto':
-                self.borderless = self._fake_fullscreen = False
+                self.custom_titlebar = \
+                    self.borderless = self._fake_fullscreen = False
+            elif self.custom_titlebar:
+                if platform == 'win':
+                    # use custom behaviour
+                    # To handle aero snapping and rounded corners
+                    self.borderless = False
         if self.fullscreen == 'fake':
             self.borderless = self._fake_fullscreen = True
             Logger.warning("The 'fake' fullscreen option has been "
@@ -288,11 +300,20 @@ class WindowSDL(WindowBase):
                 self.fullscreen, resizable, state,
                 self.get_gl_backend_name())
 
-            # calculate density
-            sz = self._win._get_gl_size()[0]
-            self._density = density = sz / _size[0]
-            if self._is_desktop and self.size[0] != _size[0]:
-                self.dpi = density * 96.
+            # calculate density/dpi
+            if platform == 'win':
+                from ctypes import windll
+                self._density = 1.
+                try:
+                    hwnd = windll.user32.GetActiveWindow()
+                    self.dpi = float(windll.user32.GetDpiForWindow(hwnd))
+                except AttributeError:
+                    pass
+            else:
+                sz = self._win._get_gl_size()[0]
+                self._density = density = sz / _size[0]
+                if self._is_desktop and self.size[0] != _size[0]:
+                    self.dpi = density * 96.
 
             # never stay with a None pos, application using w.center
             # will be fired.
@@ -305,7 +326,29 @@ class WindowSDL(WindowBase):
         else:
             w, h = self.system_size
             self._win.resize_window(w, h)
-            self._win.set_border_state(self.borderless)
+            if platform == 'win':
+                if self.custom_titlebar:
+                    # check dragging+resize or just dragging
+                    if Config.getboolean('graphics', 'resizable'):
+                        import win32con
+                        import ctypes
+                        self._win.set_border_state(False)
+                        # make windows dispatch,
+                        # WM_NCCALCSIZE explicitly
+                        ctypes.windll.user32.SetWindowPos(
+                            self._win.get_window_info().window,
+                            win32con.HWND_TOP,
+                            *self._win.get_window_pos(),
+                            *self.system_size,
+                            win32con.SWP_FRAMECHANGED
+                        )
+                    else:
+                        self._win.set_border_state(True)
+                else:
+                    self._win.set_border_state(self.borderless)
+            else:
+                self._win.set_border_state(self.borderless
+                                           or self.custom_titlebar)
             self._win.set_fullscreen_mode(self.fullscreen)
 
         super(WindowSDL, self).create_window()
@@ -337,9 +380,17 @@ class WindowSDL(WindowBase):
         except:
             Logger.exception('Window: cannot set icon')
 
+        if platform == 'win' and self._win_dpi_watch is None:
+            self._win_dpi_watch = _WindowsSysDPIWatch(window=self)
+            self._win_dpi_watch.start()
+
     def close(self):
         self._win.teardown_window()
         super(WindowSDL, self).close()
+        if self._win_dpi_watch is not None:
+            self._win_dpi_watch.stop()
+            self._win_dpi_watch = None
+
         self.initialized = False
 
     def maximize(self):
@@ -469,9 +520,8 @@ class WindowSDL(WindowBase):
         self._win._set_cursor_state(value)
 
     def _fix_mouse_pos(self, x, y):
-        y -= 1
         self.mouse_pos = (x * self._density,
-                          (self.system_size[1] - y) * self._density)
+                          (self.system_size[1] - y - 1) * self._density)
         return x, y
 
     def mainloop(self):
@@ -493,6 +543,10 @@ class WindowSDL(WindowBase):
             if action == 'dropfile':
                 dropfile = args
                 self.dispatch('on_dropfile', dropfile[0])
+            # app_terminating event might be received while the app is paused
+            # in this case EventLoop.quit will be set at _event_filter
+            elif EventLoop.quit:
+                return
 
         while True:
             event = self._win.poll()
@@ -772,10 +826,19 @@ class WindowSDL(WindowBase):
         self._modifiers = list(modifiers)
         return
 
-    def request_keyboard(self, callback, target, input_type='text'):
+    def request_keyboard(
+            self, callback, target, input_type='text', keyboard_suggestions=True
+    ):
         self._sdl_keyboard = super(WindowSDL, self).\
-            request_keyboard(callback, target, input_type)
-        self._win.show_keyboard(self._system_keyboard, self.softinput_mode)
+            request_keyboard(
+            callback, target, input_type, keyboard_suggestions
+        )
+        self._win.show_keyboard(
+            self._system_keyboard,
+            self.softinput_mode,
+            input_type,
+            keyboard_suggestions,
+        )
         Clock.schedule_interval(self._check_keyboard_shown, 1 / 5.)
         return self._sdl_keyboard
 
@@ -803,3 +866,76 @@ class WindowSDL(WindowBase):
 
     def ungrab_mouse(self):
         self._win.grab_mouse(False)
+
+    def set_custom_titlebar(self, titlebar_widget):
+        if not self.custom_titlebar:
+            Logger.warning("Window: Window.custom_titlebar not set to True… "
+                           "can't set custom titlebar")
+            return
+        self.titlebar_widget = titlebar_widget
+        return self._win.set_custom_titlebar(self.titlebar_widget) == 0
+
+
+class _WindowsSysDPIWatch:
+
+    hwnd = None
+
+    new_windProc = None
+
+    old_windProc = None
+
+    window: WindowBase = None
+
+    def __init__(self, window: WindowBase):
+        self.window = window
+
+    def start(self):
+        from kivy.input.providers.wm_common import WNDPROC, \
+            SetWindowLong_WndProc_wrapper
+        from ctypes import windll
+
+        self.hwnd = windll.user32.GetActiveWindow()
+
+        # inject our own handler to handle messages before window manager
+        self.new_windProc = WNDPROC(self._wnd_proc)
+        self.old_windProc = SetWindowLong_WndProc_wrapper(
+            self.hwnd, self.new_windProc)
+
+    def stop(self):
+        from kivy.input.providers.wm_common import \
+            SetWindowLong_WndProc_wrapper
+
+        if self.hwnd is None:
+            return
+
+        self.new_windProc = SetWindowLong_WndProc_wrapper(
+            self.hwnd, self.old_windProc)
+        self.hwnd = self.new_windProc = self.old_windProc = None
+
+    def _wnd_proc(self, hwnd, msg, wParam, lParam):
+        from kivy.input.providers.wm_common import WM_DPICHANGED, WM_NCCALCSIZE
+        from ctypes import windll
+
+        if msg == WM_DPICHANGED:
+            ow, oh = self.window.size
+            old_dpi = self.window.dpi
+
+            def clock_callback(*args):
+                if x_dpi != y_dpi:
+                    raise ValueError(
+                        'Can only handle DPI that are same for x and y')
+
+                self.window.dpi = x_dpi
+
+                # maintain the same window size
+                ratio = x_dpi / old_dpi
+                self.window.size = ratio * ow, ratio * oh
+
+            x_dpi = wParam & 0xFFFF
+            y_dpi = wParam >> 16
+            Clock.schedule_once(clock_callback, -1)
+        elif Config.getboolean('graphics', 'resizable') \
+                and msg == WM_NCCALCSIZE and self.window.custom_titlebar:
+            return 0
+        return windll.user32.CallWindowProcW(
+            self.old_windProc, hwnd, msg, wParam, lParam)

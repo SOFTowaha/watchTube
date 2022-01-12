@@ -1,8 +1,12 @@
+#: import threading threading
+
 <LWI>:
     id: list_item
 
-    IconLeftWidget:
-        icon: root.iconImage
+    # IconLeftWidgetWithoutTouch:
+    IconLeftWidgetWithoutTouch:
+        icon: root.icon
+
 
     IconRightWidget:
         icon: "trash-can-outline"
@@ -37,8 +41,19 @@
 
     MDRectangleFlatButton:
         text: 'Download'
-        on_press: root.download()
+        on_press: threading.Thread(target=root.download).start()
         size_hint_x: 100
+
+    Label:
+        text: ''
+        size_hint_y: 5
+
+    MDProgressBar:
+        id: progress_bar
+        min: 0
+        max: 100
+        value: 100
+        running_duration: 1
 
     Label:
         text: ''
@@ -58,7 +73,7 @@
             size_hint_x: 20
 
         MDCheckbox:
-            on_press: root.changeType()
+            on_press: root.change_type()
             size_hint_x: 10
     
     Label:
@@ -69,6 +84,7 @@
         do_scroll_x: True
         size_hint_x: 100
         size_hint_y: 80
+
         MDList:
             id: list
 

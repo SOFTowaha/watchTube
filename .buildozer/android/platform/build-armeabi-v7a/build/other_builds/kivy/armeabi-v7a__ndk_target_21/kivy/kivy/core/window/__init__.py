@@ -206,6 +206,8 @@ class WindowBase(EventDispatcher):
             Set the window border state. Check the
             :mod:`~kivy.config` documentation for a
             more detailed explanation on the values.
+        `custom_titlebar`: str, one of ('0', '1')
+            Set to `'1'` to uses a custom titlebar
         `fullscreen`: str, one of ('0', '1', 'auto', 'fake')
             Make the window fullscreen. Check the
             :mod:`~kivy.config` documentation for a
@@ -339,7 +341,6 @@ class WindowBase(EventDispatcher):
     _size = ListProperty([0, 0])
     _modifiers = ListProperty([])
     _rotation = NumericProperty(0)
-    _clearcolor = ObjectProperty([0, 0, 0, 1])
     _focus = BooleanProperty(True)
 
     gl_backends_allowed = []
@@ -351,6 +352,11 @@ class WindowBase(EventDispatcher):
     gl_backends_ignored = []
     """
     A list of Kivy gl backend names that may not be used with this window.
+    """
+
+    managed_textinput = False
+    """
+    True if this Window class uses `on_textinput` to insert text, internal.
     """
 
     children = ListProperty([])
@@ -450,19 +456,7 @@ class WindowBase(EventDispatcher):
     :attr:`size` is an :class:`~kivy.properties.AliasProperty`.
     '''
 
-    def _get_clearcolor(self):
-        return self._clearcolor
-
-    def _set_clearcolor(self, value):
-        if value is not None:
-            if type(value) not in (list, tuple):
-                raise Exception('Clearcolor must be a list or tuple')
-            if len(value) != 4:
-                raise Exception('Clearcolor must contain 4 values')
-        self._clearcolor = value
-
-    clearcolor = AliasProperty(_get_clearcolor, _set_clearcolor,
-                               bind=('_clearcolor', ))
+    clearcolor = ColorProperty((0, 0, 0, 1))
     '''Color used to clear the window.
 
     ::
@@ -480,8 +474,12 @@ class WindowBase(EventDispatcher):
 
     .. versionadded:: 1.0.9
 
-    :attr:`clearcolor` is an :class:`~kivy.properties.AliasProperty` and
+    :attr:`clearcolor` is an :class:`~kivy.properties.ColorProperty` and
     defaults to (0, 0, 0, 1).
+
+    .. versionchanged:: 2.1.0
+        Changed from :class:`~kivy.properties.AliasProperty` to
+        :class:`~kivy.properties.ColorProperty`.
     '''
 
     # make some property read-only
@@ -684,7 +682,9 @@ class WindowBase(EventDispatcher):
                                 bind=('_size', 'softinput_mode',
                                       'keyboard_height'),
                                 cache=True)
-    '''Real size of the window ignoring rotation.
+    '''Real size of the window ignoring rotation. If the density is
+    not 1, the :attr:`system_size` is the :attr:`size` divided by
+    density.
 
     .. versionadded:: 1.0.9
 
@@ -692,8 +692,8 @@ class WindowBase(EventDispatcher):
     '''
 
     def _get_effective_size(self):
-        '''On density=1 and non-ios displays, return system_size, else
-        return scaled / rotated size.
+        '''On density=1 and non-ios displays, return :attr:`system_size`,
+        else return scaled / rotated :attr:`size`.
 
         Used by MouseMotionEvent.update_graphics() and WindowBase.on_motion().
         '''
@@ -711,6 +711,19 @@ class WindowBase(EventDispatcher):
     .. versionadded:: 1.9.0
 
     :attr:`borderless` is a :class:`~kivy.properties.BooleanProperty` and
+    defaults to False.
+    '''
+
+    custom_titlebar = BooleanProperty(False)
+    '''When set to True, allows the user to set a widget as a titlebar.
+    Check the :mod:`~kivy.config` documentation for a more detailed
+    explanation on the values.
+
+    .. versionadded:: 2.1.0
+
+    see :meth:`~kivy.core.window.WindowBase.set_custom_titlebar`
+    for detailed usage
+    :attr:`custom_titlebar` is a :class:`~kivy.properties.BooleanProperty` and
     defaults to False.
     '''
 
@@ -890,7 +903,6 @@ class WindowBase(EventDispatcher):
         return cls.__instance
 
     def __init__(self, **kwargs):
-
         force = kwargs.pop('force', False)
 
         # don't init window 2 times,
@@ -914,6 +926,9 @@ class WindowBase(EventDispatcher):
         # set the default window parameter according to the configuration
         if 'borderless' not in kwargs:
             kwargs['borderless'] = Config.getboolean('graphics', 'borderless')
+        if 'custom_titlebar' not in kwargs:
+            kwargs['custom_titlebar'] = Config.getboolean('graphics',
+                                                          'custom_titlebar')
         if 'fullscreen' not in kwargs:
             fullscreen = Config.get('graphics', 'fullscreen')
             if fullscreen not in ('auto', 'fake'):
@@ -989,8 +1004,17 @@ class WindowBase(EventDispatcher):
         if not hasattr(self, '_context'):
             self._context = get_current_context()
 
+        # because Window is created as soon as imported, if we bound earlier,
+        # metrics would be imported when dp is set during window creation.
+        # Instead, don't process dpi changes until everything is set
+        self.fbind('dpi', self._reset_metrics_dpi)
+
         # mark as initialized
         self.initialized = True
+
+    def _reset_metrics_dpi(self, *args):
+        from kivy.metrics import Metrics
+        Metrics.reset_dpi()
 
     def _bind_create_window(self):
         for prop in (
@@ -1132,8 +1156,58 @@ class WindowBase(EventDispatcher):
     defaults to 'data/images/defaultshape.png'. This value is taken from
     :class:`~kivy.config.Config`.
     '''
+    def set_custom_titlebar(self, widget):
+        """
+        Sets a Widget as a titlebar
 
-    def on_shape_image(self, instane, value):
+            :widget: The widget you want to set as the titlebar
+
+        .. versionadded:: 2.1.0
+
+        This function returns `True` on successfully setting the custom titlebar,
+        else false
+
+        How to use this feature
+
+        ::
+
+            1. first set Window.custom_titlebar to True
+            2. then call Window.set_custom_titlebar with the widget/layout you want to set as titlebar as the argument # noqa: E501
+
+        If you want a child of the widget to receive touch events, in
+        that child define a property `draggable` and set it to False
+
+        If you set the property `draggable` on a layout,
+        all the child in the layout will receive touch events
+
+        If you want to override default behaviour, add function `in_drag_area(x,y)`
+        to the widget
+
+        The function is call with two args x,y which are mouse.x, and mouse.y
+        the function should return
+
+        | `True` if that point should be used to drag the window
+        | `False` if you want to receive the touch event at the point
+
+        .. note::
+            If you use :meth:`in_drag_area` property `draggable`
+            will not be checked
+
+        .. note::
+            This feature requires the SDL2 window provider and is currently
+            only supported on desktop platforms.
+
+        .. warning::
+            :mod:`~kivy.core.window.WindowBase.custom_titlebar` must be set to True
+            for the widget to be successfully set as a titlebar
+
+        """
+
+        Logger.warning('Window: set_custom_titlebar '
+                       'is not implemented in the current'
+                       ' window provider.')
+
+    def on_shape_image(self, instance, value):
         if self.initialized:
             self._set_shape(
                 shape_image=value, mode=self.shape_mode,
@@ -1150,7 +1224,7 @@ class WindowBase(EventDispatcher):
     defaults to True.
     '''
 
-    def on_shape_cutoff(self, instane, value):
+    def on_shape_cutoff(self, instance, value):
         self._set_shape(
             shape_image=self.shape_image, mode=self.shape_mode,
             cutoff=value, color_key=self.shape_color_key
@@ -1215,7 +1289,7 @@ class WindowBase(EventDispatcher):
         Changed from :class:`~kivy.properties.ListProperty` to
         :class:`~kivy.properties.ColorProperty`.
     '''
-    def on_shape_color_key(self, instane, value):
+    def on_shape_color_key(self, instance, value):
         self._set_shape(
             shape_image=self.shape_image, mode=self.shape_mode,
             cutoff=self.shape_cutoff, color_key=value
@@ -1345,13 +1419,13 @@ class WindowBase(EventDispatcher):
     def clear(self):
         '''Clear the window with the background color'''
         # XXX FIXME use late binding
-        from kivy.graphics.opengl import glClearColor, glClear, \
-            GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, GL_STENCIL_BUFFER_BIT
-        cc = self._clearcolor
-        if cc is not None:
-            glClearColor(*cc)
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
-                    GL_STENCIL_BUFFER_BIT)
+        from kivy.graphics import opengl as gl
+        gl.glClearColor(*self.clearcolor)
+        gl.glClear(
+            gl.GL_COLOR_BUFFER_BIT
+            | gl.GL_DEPTH_BUFFER_BIT
+            | gl.GL_STENCIL_BUFFER_BIT
+        )
 
     def set_title(self, title):
         '''Set the window title.
@@ -1372,6 +1446,58 @@ class WindowBase(EventDispatcher):
 
     def to_window(self, x, y, initial=True, relative=False):
         return (x, y)
+
+    def to_normalized_pos(self, x, y):
+        '''Transforms absolute coordinates to normalized (0-1) coordinates
+        using :attr:`system_size`.
+
+        .. versionadded:: 2.1.0
+        '''
+        x_max = self.system_size[0] - 1.0
+        y_max = self.system_size[1] - 1.0
+        return (
+            x / x_max if x_max > 0 else 0.0,
+            y / y_max if y_max > 0 else 0.0
+        )
+
+    def transform_motion_event_2d(self, me, widget=None):
+        '''Returns transformed motion event `me` to this window size and then
+        if `widget` is passed transforms `me` to `widget`'s local coordinates.
+
+        :raises:
+            `AttributeError`: If widget's ancestor is ``None``.
+
+        .. note::
+            Unless it's a specific case, call
+            :meth:`~kivy.input.motionevent.MotionEvent.push` before and
+            :meth:`~kivy.input.motionevent.MotionEvent.pop` after this method's
+            call to preserve previous values of `me`'s attributes.
+
+        .. versionadded:: 2.1.0
+        '''
+        width, height = self._get_effective_size()
+        me.scale_for_screen(
+            width, height,
+            rotation=self.rotation,
+            smode=self.softinput_mode,
+            kheight=self.keyboard_height
+        )
+        if widget is None:
+            return me
+        parent = widget.parent
+        try:
+            if parent:
+                me.apply_transform_2d(parent.to_widget)
+            else:
+                me.apply_transform_2d(widget.to_widget)
+                me.apply_transform_2d(widget.to_parent)
+        except AttributeError:
+            # when using inner window, an app have grab the touch
+            # but app is removed. The touch can't access
+            # to one of the parent. (i.e, self.parent will be None)
+            # and BAM the bug happen.
+            raise
+        return me
 
     def _apply_transform(self, m):
         return m
@@ -1404,10 +1530,12 @@ class WindowBase(EventDispatcher):
                 The Motion Event currently dispatched.
         '''
         if me.is_touch:
-            w, h = self._get_effective_size()
-            me.scale_for_screen(w, h, rotation=self._rotation,
-                                smode=self.softinput_mode,
-                                kheight=self.keyboard_height)
+            # TODO: Use me.push/me.pop methods because `me` is transformed
+            # Clock execution of partial ScrollView._on_touch_up method and
+            # other similar cases should be changed so that me.push/me.pop can
+            # be used restore previous values of event's attributes
+            # me.push()
+            self.transform_motion_event_2d(me)
             if etype == 'begin':
                 self.dispatch('on_touch_down', me)
             elif etype == 'update':
@@ -1415,6 +1543,7 @@ class WindowBase(EventDispatcher):
             elif etype == 'end':
                 self.dispatch('on_touch_up', me)
                 FocusBehavior._handle_post_on_touch_up(me)
+            # me.pop()
 
     def on_touch_down(self, touch):
         '''Event called when a touch down event is initiated.
@@ -1472,9 +1601,7 @@ class WindowBase(EventDispatcher):
         from kivy.graphics.transformation import Matrix
         from math import radians
 
-        w, h = self.system_size
-        if self._density != 1:
-            w, h = self.size
+        w, h = self._get_effective_size()
 
         smode = self.softinput_mode
         target = self._system_keyboard.target
@@ -1820,17 +1947,15 @@ class WindowBase(EventDispatcher):
         '''
         pass
 
-    @reify
-    def dpi(self):
-        '''Return the DPI of the screen. If the implementation doesn't support
-        any DPI lookup, it will just return 96.
+    dpi = NumericProperty(96.)
+    '''Return the DPI of the screen as computed by the window. If the
+    implementation doesn't support DPI lookup, it's 96.
 
-        .. warning::
+    .. warning::
 
-            This value is not cross-platform. Use
-            :attr:`kivy.base.EventLoop.dpi` instead.
-        '''
-        return 96.
+        This value is not cross-platform. Use
+        :attr:`kivy.metrics.Metrics.dpi` instead.
+    '''
 
     def configure_keyboards(self):
         # Configure how to provide keyboards (virtual or not)
@@ -1912,7 +2037,9 @@ class WindowBase(EventDispatcher):
             if keyboard:
                 keyboard.release()
 
-    def request_keyboard(self, callback, target, input_type='text'):
+    def request_keyboard(
+            self, callback, target, input_type='text', keyboard_suggestions=True
+    ):
         '''.. versionadded:: 1.0.4
 
         Internal widget method to request the keyboard. This method is rarely
@@ -1945,6 +2072,13 @@ class WindowBase(EventDispatcher):
                     `input_type` is currently only honored on mobile devices.
 
                 .. versionadded:: 1.8.0
+
+            `keyboard_suggestions`: bool
+                If True provides auto suggestions on top of keyboard.
+                This will only work if input_type is set to `text`, `url`,
+                `mail` or `address`.
+
+                .. versionadded:: 2.1.0
 
         :Return:
             An instance of :class:`Keyboard` containing the callback, target,

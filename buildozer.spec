@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = My Application
+title = watchTube
 
 # (str) Package name
-package.name = myapp
+package.name = watchTube
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.test
+package.domain = org.dasadweb
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -36,7 +36,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy==master,pytube,kivymd==0.104.2,pillow,android,plyer,pyjnius,ffpyplayer,ffmpeg
+requirements = python3,kivy==master,pytube,https://github.com/kivymd/KivyMD/archive/master.zip,pillow,android,plyer,pyjnius
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -44,9 +44,11 @@ requirements = python3,kivy==master,pytube,kivymd==0.104.2,pillow,android,plyer,
 
 # (str) Presplash of the application
 #presplash.filename = %(source.dir)s/data/presplash.png
+presplash.filename = %(source.dir)s/assets/SplashScreen.png
 
 # (str) Icon of the application
 #icon.filename = %(source.dir)s/data/icon.png
+icon.filename = %(source.dir)s/assets/watchTube-Icon.png
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
 orientation = portrait
@@ -80,6 +82,7 @@ fullscreen = 0
 # darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
 # olive, purple, silver, teal.
 #android.presplash_color = #FFFFFF
+android.presplash_color = #8338EC
 
 # (string) Presplash animation using Lottie format.
 # see https://lottiefiles.com/ for examples and https://airbnb.design/lottie/
