@@ -54,7 +54,7 @@ from kivy.uix.boxlayout import BoxLayout
 
 
 class SplitterStrip(Button):
-    '''Class used for the graphical representation of a
+    '''Class used for tbe graphical representation of a
     :class:`kivy.uix.splitter.SplitterStripe`.
     '''
     pass
@@ -231,7 +231,7 @@ class Splitter(BoxLayout):
         _strp.disabled = self.disabled
         self.bind(disabled=_strp.setter('disabled'))
 
-    def add_widget(self, widget, index=0, *args, **kwargs):
+    def add_widget(self, widget, index=0):
         if self._container or not widget:
             return Exception('Splitter accepts only one Child')
         self._container = widget
@@ -244,15 +244,15 @@ class Splitter(BoxLayout):
         index = 0
         if sz_frm in ('r', 'b'):
             index = 1
-        super(Splitter, self).add_widget(widget, index, *args, **kwargs)
+        super(Splitter, self).add_widget(widget, index)
         self.on_sizable_from(self, self.sizable_from)
 
-    def remove_widget(self, widget, *args, **kwargs):
-        super(Splitter, self).remove_widget(widget, *args, **kwargs)
+    def remove_widget(self, widget, *largs):
+        super(Splitter, self).remove_widget(widget)
         if widget == self._container:
             self._container = None
 
-    def clear_widgets(self, *args, **kwargs):
+    def clear_widgets(self):
         self.remove_widget(self._container)
 
     def strip_down(self, instance, touch):

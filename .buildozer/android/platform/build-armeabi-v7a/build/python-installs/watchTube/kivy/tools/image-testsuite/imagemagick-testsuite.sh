@@ -36,7 +36,7 @@ EOM
 }
 
 # Outputs command line arguments for convert to draw pixels from the
-# specified pattern in the specified direction. It is always 1 in w or h.
+# specifed pattern in the specified direction. It is always 1 in w or h.
 draw_pattern() {
     pattern=$1
     direction="${2:-x}"

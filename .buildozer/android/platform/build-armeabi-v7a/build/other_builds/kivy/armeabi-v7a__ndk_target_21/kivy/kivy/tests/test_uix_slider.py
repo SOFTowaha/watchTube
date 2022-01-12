@@ -41,11 +41,11 @@ class SliderMoveTestCase(GraphicUnitTest):
         builder.trace = lambda *_, **__: None
         super(SliderMoveTestCase, self).setUp()
 
-    def tearDown(self, *args, **kwargs):
+    def tearDown(self):
         # add the logging back
         import kivy.lang.builder as builder
         builder.trace = self._trace
-        super(SliderMoveTestCase, self).tearDown(*args, **kwargs)
+        super(SliderMoveTestCase, self).tearDown()
 
     def test_slider_move(self):
         EventLoop.ensure_window()

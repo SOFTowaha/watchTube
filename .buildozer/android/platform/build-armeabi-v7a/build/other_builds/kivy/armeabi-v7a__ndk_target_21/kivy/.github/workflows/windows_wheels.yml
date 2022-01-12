@@ -67,7 +67,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: 3.x
       - uses: actions/download-artifact@v2
         with:
           name: windows_wheels
@@ -130,16 +130,6 @@ jobs:
         run: |
           . .\.ci\windows_ci.ps1
           Test-kivy-installed
-      - name: Test Kivy benchmarks
-        if: matrix.python == '3.9' && matrix.arch == 'x64' && (github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag'))
-        run: |
-          . .\.ci\windows_ci.ps1
-          Test-kivy-benchmark
-      - name: Upload benchamrks as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: benchmarks
-          path: .benchmarks-kivy
 
   windows_sdist_test:
     runs-on: windows-latest
@@ -149,7 +139,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: 3.x
       - uses: actions/download-artifact@v2
         with:
           name: windows_wheels

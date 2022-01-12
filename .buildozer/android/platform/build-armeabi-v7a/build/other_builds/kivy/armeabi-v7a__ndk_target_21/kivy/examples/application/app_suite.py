@@ -85,7 +85,7 @@ class TestPrebuiltApp(App):
 
     class Prebuilt(FloatLayout):
         """ Empty class to cause setting root to <Prebuilt> tag and
-        set inheritance """
+        set inheritence """
         pass
 
     def build(self):

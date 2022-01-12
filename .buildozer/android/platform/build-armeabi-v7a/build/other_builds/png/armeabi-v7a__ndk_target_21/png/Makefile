@@ -573,7 +573,7 @@ CCASFLAGS = -target armv7a-linux-androideabi21 -fomit-frame-pointer -march=armv7
 CCDEPMODE = depmode=gcc3
 CFLAGS = -target armv7a-linux-androideabi21 -fomit-frame-pointer -march=armv7-a -mfloat-abi=softfp -mfpu=vfp -mthumb -fPIC
 CPP = /usr/bin/ccache /home/skrci/.buildozer/android/platform/android-ndk-r19c/toolchains/llvm/prebuilt/linux-x86_64/bin/clang -target armv7a-linux-androideabi21 -fomit-frame-pointer -march=armv7-a -mfloat-abi=softfp -mfpu=vfp -mthumb -fPIC -E
-CPPFLAGS = -DANDROID -D__ANDROID_API__=21 -I/home/skrci/.buildozer/android/platform/android-ndk-r19c/sysroot/usr/include/arm-linux-androideabi -I/home/skrci/Projects/Python/Kivy/ytDownloader/.buildozer/android/platform/build-armeabi-v7a/build/python-installs/myapp/include/python3.8
+CPPFLAGS = -DANDROID -D__ANDROID_API__=21 -I/home/skrci/.buildozer/android/platform/android-ndk-r19c/sysroot/usr/include/arm-linux-androideabi -I/home/skrci/Projects/Python/Kivy/ytDownloader/.buildozer/android/platform/build-armeabi-v7a/build/python-installs/watchTube/include/python3.8
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
@@ -600,7 +600,7 @@ INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LD = arm-linux-androideabi-ld
-LDFLAGS =   -L/home/skrci/Projects/Python/Kivy/ytDownloader/.buildozer/android/platform/build-armeabi-v7a/build/libs_collections/myapp/armeabi-v7a
+LDFLAGS =   -L/home/skrci/Projects/Python/Kivy/ytDownloader/.buildozer/android/platform/build-armeabi-v7a/build/libs_collections/watchTube/armeabi-v7a
 LIBOBJS =  ${LIBOBJDIR}strtod$U.o
 LIBS = -lm -lz -lm 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool

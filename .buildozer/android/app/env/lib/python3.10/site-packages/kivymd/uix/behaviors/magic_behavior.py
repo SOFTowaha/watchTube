@@ -34,15 +34,17 @@ Example:
 
 .. code-block:: python
 
+    from kivymd.app import MDApp
     from kivy.lang import Builder
 
-    from kivymd.app import MDApp
-
     KV = '''
+    #:import MagicBehavior kivymd.uix.behaviors.MagicBehavior
+
+
     <MagicButton@MagicBehavior+MDRectangleFlatButton>
 
 
-    MDFloatLayout:
+    FloatLayout:
 
         MagicButton:
             text: "WOBBLE EFFECT"
@@ -86,8 +88,6 @@ Example:
 
 __all__ = ("MagicBehavior",)
 
-from typing import NoReturn
-
 from kivy.animation import Animation
 from kivy.lang import Builder
 from kivy.properties import NumericProperty
@@ -129,7 +129,7 @@ class MagicBehavior:
     and defaults to `1`.
     """
 
-    def grow(self) -> NoReturn:
+    def grow(self):
         """Grow effect animation."""
 
         (
@@ -144,7 +144,7 @@ class MagicBehavior:
             )
         ).start(self)
 
-    def shake(self) -> NoReturn:
+    def shake(self):
         """Shake effect animation."""
 
         (
@@ -154,7 +154,7 @@ class MagicBehavior:
             )
         ).start(self)
 
-    def wobble(self) -> NoReturn:
+    def wobble(self):
         """Wobble effect animation."""
 
         (
@@ -172,7 +172,7 @@ class MagicBehavior:
             )
         ).start(self)
 
-    def twist(self) -> NoReturn:
+    def twist(self):
         """Twist effect animation."""
 
         (
@@ -180,7 +180,7 @@ class MagicBehavior:
             + Animation(rotate=0, t="out_elastic", d=0.5 / self.magic_speed)
         ).start(self)
 
-    def shrink(self) -> NoReturn:
+    def shrink(self):
         """Shrink effect animation."""
 
         Animation(

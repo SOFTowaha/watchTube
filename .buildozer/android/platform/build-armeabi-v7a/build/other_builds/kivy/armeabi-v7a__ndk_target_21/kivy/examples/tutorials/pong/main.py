@@ -59,7 +59,7 @@ class PongGame(Widget):
         if self.ball.x < self.x:
             self.player2.score += 1
             self.serve_ball(vel=(4, 0))
-        if self.ball.right > self.width:
+        if self.ball.x > self.width:
             self.player1.score += 1
             self.serve_ball(vel=(-4, 0))
 

@@ -64,7 +64,11 @@ prepare_env_for_unittest() {
 }
 
 install_kivy() {
+  path="$(pwd)"
+  ln -s "$path" ~/base_kivy
+  cd ~/base_kivy
   python3 -m pip install -e "$(pwd)[dev,full]"
+  cd "$path"
 }
 
 
@@ -98,11 +102,7 @@ install_kivy_sdist() {
 
 test_kivy() {
   rm -rf kivy/tests/build || true
-  KIVY_NO_ARGS=1 python3 -m pytest --maxfail=10 --timeout=300 --cov=kivy --cov-report term --cov-branch "$(pwd)/kivy/tests"
-}
-
-test_kivy_benchmark() {
-  KIVY_NO_ARGS=1 python3 -m pytest "$(pwd)/kivy/tests" --benchmark-only
+  KIVY_NO_ARGS=1 python3 -m pytest --timeout=300 --cov=kivy --cov-report term --cov-branch "$(pwd)/kivy/tests"
 }
 
 test_kivy_install() {
@@ -116,7 +116,7 @@ test_kivy_install() {
   plugins = kivy.tools.coverage
 
 EOF
-  KIVY_TEST_AUDIO=0 KIVY_NO_ARGS=1 python3 -m pytest --maxfail=10 --timeout=300 .
+  KIVY_TEST_AUDIO=0 KIVY_NO_ARGS=1 python3 -m pytest --timeout=300 .
 }
 
 upload_coveralls() {
@@ -217,8 +217,8 @@ upload_file_to_server() {
     mkdir ~/.ssh
   fi
 
-  printf "%s" "$UBUNTU_UPLOAD_KEY" >~/.ssh/id_ed25519
-  chmod 600 ~/.ssh/id_ed25519
+  printf "%s" "$UBUNTU_UPLOAD_KEY" >~/.ssh/id_rsa
+  chmod 600 ~/.ssh/id_rsa
 
   echo -e "Host $ip\n\tStrictHostKeyChecking no\n" >>~/.ssh/config
   rsync -avh -e "ssh -p 2458" --include="*/" --include="$file_pat" --exclude="*" "$file_path/" "root@$ip:/web/downloads/ci/$server_path"

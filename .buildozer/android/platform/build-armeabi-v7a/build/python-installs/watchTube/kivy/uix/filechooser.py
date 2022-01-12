@@ -124,7 +124,7 @@ if platform == 'win':
         _have_win32file = True
     except ImportError:
         Logger.error('filechooser: win32file module is missing')
-        Logger.error('filechooser: we cannot check if a file is hidden or not')
+        Logger.error('filechooser: we cant check if a file is hidden or not')
 
 
 def alphanumeric_folders_first(files, filesystem):
@@ -1010,9 +1010,9 @@ class FileChooser(FileChooserController):
 
         self.fbind('view_mode', self.trigger_update_view)
 
-    def add_widget(self, widget, *args, **kwargs):
+    def add_widget(self, widget, **kwargs):
         if widget is self._progress:
-            super(FileChooser, self).add_widget(widget, *args, **kwargs)
+            super(FileChooser, self).add_widget(widget, **kwargs)
         elif hasattr(widget, 'VIEWNAME'):
             name = widget.VIEWNAME + 'view'
             screen = Screen(name=name)

@@ -1,11 +1,12 @@
+<img src="https://github.com/5KRC1/5KRC1/blob/main/images/watchTube/github-watchtube-main.png" alt="Hero Banner"/>
+
 # watchTube
 
 YouTube Downloader app for android smartphones
 
 ### IMAGES
 
-<!-- ![alt Screenshot](https://github.com/5KRC1/README-assets/blob/master/images/watchTube_screenshot.png) -->
-<img src="https://github.com/5KRC1/README-assets/blob/master/images/watchTube_screenshot.png" style="height: 300px;">
+<img src="https://github.com/5KRC1/5KRC1/blob/main/images/watchTube/watchtube-screenshot.png" style="height: 300px;">
 
 ### INSTALLATION
 

@@ -41,7 +41,6 @@ classname before you re-assign it::
 __all__ = ('Factory', 'FactoryBase', 'FactoryException')
 
 import copy
-import importlib
 from kivy.logger import Logger
 from kivy.context import register_context
 
@@ -152,7 +151,7 @@ class FactoryBase(object):
         # No class to return, import the module
         if cls is None:
             if item['module']:
-                module = importlib.__import__(
+                module = __import__(
                     name=item['module'],
                     fromlist='*',
                     level=0  # force absolute

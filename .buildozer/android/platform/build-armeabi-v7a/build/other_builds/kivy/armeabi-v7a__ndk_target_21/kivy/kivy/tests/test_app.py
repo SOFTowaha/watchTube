@@ -1,6 +1,4 @@
-from os import name
 import os.path
-from math import isclose
 from textwrap import dedent
 
 from kivy.app import App
@@ -28,18 +26,8 @@ class AppTest(GraphicUnitTest):
     def test_user_data_dir(self):
         a = App()
         data_dir = a.user_data_dir
-        assert os.path.exists(data_dir)
-
-    def test_directory(self):
-        a = App()
-        assert os.path.exists(a.directory)
-
-    def test_name(self):
-        class NameTest(App):
-            pass
-
-        a = NameTest()
-        assert a.name == 'nametest'
+        if not os.path.exists(data_dir):
+            raise Exception("user_data_dir didnt exists")
 
 
 def basic_app():
@@ -105,8 +93,7 @@ async def test_drag_app(kivy_app):
             pos=(100, 100), target_pos=(200, 200)):
         pass
 
-    assert isclose(scatter.x, 100)
-    assert isclose(scatter.y, 100)
+    assert tuple(scatter.pos) == (100, 100)
 
 
 def text_app():

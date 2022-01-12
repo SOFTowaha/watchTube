@@ -7,8 +7,6 @@ Behaviors/Background Color
 
 __all__ = ("BackgroundColorBehavior", "SpecificBackgroundColorBehavior")
 
-from typing import List, NoReturn
-
 from kivy.lang import Builder
 from kivy.properties import (
     BoundedNumericProperty,
@@ -23,7 +21,6 @@ from kivy.properties import (
 from kivy.utils import get_color_from_hex
 
 from kivymd.color_definitions import hue, palette, text_colors
-from kivymd.theming import ThemeManager
 
 from .elevation import CommonElevationBehavior
 
@@ -33,7 +30,7 @@ Builder.load_string(
 
 
 <BackgroundColorBehavior>
-    canvas:
+    canvas.before:
         PushMatrix
         Rotate:
             angle: self.angle
@@ -49,7 +46,6 @@ Builder.load_string(
         Color:
             rgba: self.line_color if self.line_color else (0, 0, 0, 0)
         Line:
-            width: root.line_width
             rounded_rectangle:
                 [ \
                 self.x,
@@ -168,16 +164,6 @@ class BackgroundColorBehavior(CommonElevationBehavior):
     and defaults to `[0, 0, 0, 0]`.
     """
 
-    line_width = NumericProperty(1)
-    """
-    Border of the specified width will be used to border the widget.
-
-    .. versionadded:: 1.0.0
-
-    :attr:`line_width` is an :class:`~kivy.properties.NumericProperty`
-    and defaults to `1`.
-    """
-
     angle = NumericProperty(0)
     background_origin = ListProperty(None)
 
@@ -192,9 +178,7 @@ class BackgroundColorBehavior(CommonElevationBehavior):
         super().__init__(**kwarg)
         self.bind(pos=self.update_background_origin)
 
-    def update_background_origin(
-        self, instance_md_widget, pos: List[float]
-    ) -> NoReturn:
+    def update_background_origin(self, *args):
         if self.background_origin:
             self._background_origin = self.background_origin
         else:
@@ -244,9 +228,7 @@ class SpecificBackgroundColorBehavior(BackgroundColorBehavior):
         self.bind(background_palette=self._update_specific_text_color)
         self._update_specific_text_color(None, None)
 
-    def _update_specific_text_color(
-        self, instance_theme_manager: ThemeManager, theme_style: str
-    ) -> NoReturn:
+    def _update_specific_text_color(self, instance, value):
         if hasattr(self, "theme_cls"):
             palette = {
                 "Primary": self.theme_cls.primary_palette,

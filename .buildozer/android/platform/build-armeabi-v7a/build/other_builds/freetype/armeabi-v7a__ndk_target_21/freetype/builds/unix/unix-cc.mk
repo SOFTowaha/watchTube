@@ -78,7 +78,7 @@ T := -o$(space)
 #
 #   We use our own FreeType configuration file.
 #
-CPPFLAGS := -DANDROID -D__ANDROID_API__=21 -I/home/skrci/.buildozer/android/platform/android-ndk-r19c/sysroot/usr/include/arm-linux-androideabi -I/home/skrci/Projects/Python/Kivy/ytDownloader/.buildozer/android/platform/build-armeabi-v7a/build/python-installs/myapp/include/python3.8
+CPPFLAGS := -DANDROID -D__ANDROID_API__=21 -I/home/skrci/.buildozer/android/platform/android-ndk-r19c/sysroot/usr/include/arm-linux-androideabi -I/home/skrci/Projects/Python/Kivy/ytDownloader/.buildozer/android/platform/build-armeabi-v7a/build/python-installs/watchTube/include/python3.8
 CFLAGS   := -c -Wall -target armv7a-linux-androideabi21 -fomit-frame-pointer -march=armv7-a -mfloat-abi=softfp -mfpu=vfp -mthumb -fPIC -I/home/skrci/.buildozer/android/platform/android-ndk-r19c/sysroot/usr/include -fvisibility=hidden  -DFT_CONFIG_CONFIG_H="<ftconfig.h>"
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
@@ -99,7 +99,7 @@ endif
 
 # Linker flags.
 #
-LDFLAGS           :=   -L/home/skrci/Projects/Python/Kivy/ytDownloader/.buildozer/android/platform/build-armeabi-v7a/build/libs_collections/myapp/armeabi-v7a -L/home/skrci/.buildozer/android/platform/android-ndk-r19c/platforms/android-21/arch-arm/usr/lib -march=armv7-a -lz 
+LDFLAGS           :=   -L/home/skrci/Projects/Python/Kivy/ytDownloader/.buildozer/android/platform/build-armeabi-v7a/build/libs_collections/watchTube/armeabi-v7a -L/home/skrci/.buildozer/android/platform/android-ndk-r19c/platforms/android-21/arch-arm/usr/lib -march=armv7-a -lz 
 LIB_CLOCK_GETTIME :=   # for ftbench
 
 

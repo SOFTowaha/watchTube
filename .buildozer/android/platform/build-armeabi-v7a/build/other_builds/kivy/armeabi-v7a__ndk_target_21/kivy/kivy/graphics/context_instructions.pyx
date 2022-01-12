@@ -273,7 +273,6 @@ cdef class Color(ContextInstruction):
     @rgba.setter
     def rgba(self, rgba):
         self.set_state('color', [float(x) for x in rgba])
-        self.flag_data_update()
 
     @property
     def rgb(self):
@@ -403,7 +402,7 @@ cdef class BindTexture(ContextInstruction):
         if self._texture is texture:
             return
         self._texture = texture
-        self.flag_data_update()
+        self.flag_update()
 
     @property
     def index(self):
@@ -414,7 +413,7 @@ cdef class BindTexture(ContextInstruction):
         if self._index == index:
             return
         self._index = index
-        self.flag_data_update()
+        self.flag_update()
 
     @property
     def source(self):
@@ -594,7 +593,7 @@ cdef class MatrixInstruction(ContextInstruction):
     @matrix.setter
     def matrix(self, x):
         self._matrix = x
-        self.flag_data_update()
+        self.flag_update()
 
     @property
     def stack(self):

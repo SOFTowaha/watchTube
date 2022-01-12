@@ -39,10 +39,10 @@ from kivy.uix.screenmanager import Screen
 class ShowcaseScreen(Screen):
     fullscreen = BooleanProperty(False)
 
-    def add_widget(self, *args, **kwargs):
+    def add_widget(self, *args):
         if 'content' in self.ids:
-            return self.ids.content.add_widget(*args, **kwargs)
-        return super(ShowcaseScreen, self).add_widget(*args, **kwargs)
+            return self.ids.content.add_widget(*args)
+        return super(ShowcaseScreen, self).add_widget(*args)
 
 
 class ShowcaseApp(App):

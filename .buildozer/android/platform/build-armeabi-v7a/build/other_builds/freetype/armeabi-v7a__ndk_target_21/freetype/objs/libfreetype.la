@@ -17,7 +17,7 @@ old_library=''
 inherited_linker_flags=''
 
 # Libraries that this one depends upon.
-dependency_libs=' -L/home/skrci/Projects/Python/Kivy/ytDownloader/.buildozer/android/platform/build-armeabi-v7a/build/libs_collections/myapp/armeabi-v7a -L/home/skrci/.buildozer/android/platform/android-ndk-r19c/platforms/android-21/arch-arm/usr/lib -lz'
+dependency_libs=' -L/home/skrci/Projects/Python/Kivy/ytDownloader/.buildozer/android/platform/build-armeabi-v7a/build/libs_collections/watchTube/armeabi-v7a -L/home/skrci/.buildozer/android/platform/android-ndk-r19c/platforms/android-21/arch-arm/usr/lib -lz'
 
 # Names of additional weak libraries provided by this library
 weak_library_names=''

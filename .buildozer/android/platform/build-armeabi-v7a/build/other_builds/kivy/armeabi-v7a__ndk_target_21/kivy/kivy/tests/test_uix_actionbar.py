@@ -96,11 +96,11 @@ class ActionBarTestCase(GraphicUnitTest):
         builder.trace = lambda *_, **__: None
         super(ActionBarTestCase, self).setUp()
 
-    def tearDown(self, *args, **kwargs):
+    def tearDown(self):
         # add the logging back
         import kivy.lang.builder as builder
         builder.trace = self._trace
-        super(ActionBarTestCase, self).tearDown(*args, **kwargs)
+        super(ActionBarTestCase, self).tearDown()
 
     def move_frames(self, t):
         for i in range(t):

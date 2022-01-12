@@ -112,13 +112,11 @@ class Slider(Widget):
     .. versionadded:: 1.4.0
 
     Determines the size of each interval or step the slider takes between
-    :attr:`min` and :attr:`max`. If the value range can't be evenly
-    divisible by step the last step will be capped by slider.max.
-    A zero value will result in the smallest possible intervals/steps,
-    calculated from the (pixel) position of the slider.
+    min and max. If the value range can't be evenly divisible by step the
+    last step will be capped by slider.max
 
     :attr:`step` is a :class:`~kivy.properties.NumericProperty` and defaults
-    to 0.'''
+    to 1.'''
 
     background_horizontal = StringProperty(
         'atlas://data/images/defaulttheme/sliderh_background')

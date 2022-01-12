@@ -308,9 +308,7 @@ for importer, modname, package in _packages:
             format(package, modname, str(e)))
 
 # Don't go further if we generate documentation
-if any(name in sys.argv[0] for name in (
-        'sphinx-build', 'autobuild.py', 'sphinx'
-)):
+if any(name in sys.argv[0] for name in ('sphinx-build', 'autobuild.py')):
     environ['KIVY_DOC'] = '1'
 if 'sphinx-build' in sys.argv[0]:
     environ['KIVY_DOC_INCLUDE'] = '1'
@@ -353,10 +351,10 @@ if not environ.get('KIVY_DOC_INCLUDE'):
     level = LOG_LEVELS.get(Config.get('kivy', 'log_level'))
     Logger.setLevel(level=level)
 
-    # Can be overridden in command line
+    # Can be overrided in command line
     if ('KIVY_UNITTEST' not in environ and
             'KIVY_PACKAGING' not in environ and
-            environ.get('KIVY_NO_ARGS', "false") not in ('true', '1', 'yes')):
+            'KIVY_NO_ARGS' not in environ):
         # save sys argv, otherwise, gstreamer use it and display help..
         sys_argv = sys.argv
         sys.argv = sys.argv[:1]
@@ -478,11 +476,11 @@ if not environ.get('KIVY_DOC_INCLUDE'):
 for msg in _logging_msgs:
     Logger.info(msg)
 
-if not _KIVY_RELEASE and _kivy_git_hash and _kivy_build_date:
+if _KIVY_RELEASE:
+    Logger.info('Kivy: v%s' % __version__)
+elif not _KIVY_RELEASE and _kivy_git_hash and _kivy_build_date:
     Logger.info('Kivy: v%s, git-%s, %s' % (
         __version__, _kivy_git_hash[:7], _kivy_build_date))
-else:
-    Logger.info('Kivy: v%s' % __version__)
 Logger.info('Kivy: Installed at "{}"'.format(__file__))
 Logger.info('Python: v{}'.format(sys.version))
 Logger.info('Python: Interpreter at "{}"'.format(sys.executable))

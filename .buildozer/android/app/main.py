@@ -4,20 +4,16 @@ import ssl
 from jnius import autoclass
 import pytube
 import plyer
-#from circular_progress_bar import CircularProgressBar
 
 # ====kivymd imports====
 from kivymd.app import MDApp
 from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.uix.list import TwoLineAvatarIconListItem
-from kivymd.uix.selectioncontrol import MDCheckbox
-# , IRightBodyTouch
-# from kivymd.uix.boxlayout import MDBoxLayout
 
 # ====kivy imports====
 from kivy import platform
 from kivy.lang.builder import Builder
-from kivy.properties import ObjectProperty, BooleanProperty, StringProperty
+from kivy.properties import BooleanProperty, StringProperty
 from kivy.clock import Clock, mainthread
 
 
@@ -32,7 +28,7 @@ if platform == 'android':
     # requests permissions for android storage to download to folder
     from android.permissions import request_permissions, Permission
     from android.storage import primary_external_storage_path
-    ANDROID_PATH = f'{str(primary_external_storage_path())}/watchTube/'
+ANDROID_PATH = f'{str(primary_external_storage_path())}/watchTube/'
 
 # characters you dont want in your title
 SPECIAL_CHARACTERS = '"\'.-#:;$!@$()[]{,}<>€+-?/\\%&*~`|'
@@ -40,8 +36,9 @@ SPECIAL_CHARACTERS = '"\'.-#:;$!@$()[]{,}<>€+-?/\\%&*~`|'
 
 # ===send notifications===
 def send_notification(title, message):
+    print(title)
     # it's toast for now, since normal notifs not working
-    plyer.notification.notify(title=title, message=message, toast=True)
+    plyer.notification.notify(message=message, toast=True)
 
 
 # ===title generator===
@@ -97,11 +94,7 @@ def start_download_audio(audio, directory):
 
 # ===Design of files displayed===
 class LWI(TwoLineAvatarIconListItem):
-    # icon is shown twice
     icon = StringProperty('')
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
 
     # deletes file
     def delete(self, file_pressed):
@@ -116,14 +109,11 @@ class LWI(TwoLineAvatarIconListItem):
             send_notification("Success", "File deleted")
 
 
-# ===main display===
+# # ===main display===
 class Kv(MDGridLayout):
     downloading = BooleanProperty(False)  # to prevent crashes
-    url = ObjectProperty(None)  # gets url from input
+    url = StringProperty("")  # gets url from input
     content_type = BooleanProperty(False)  # False == video, True == audio
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
 
     # changing audio or video options
     def change_type(self):
@@ -150,8 +140,8 @@ class Kv(MDGridLayout):
             if item.secondary_text == title and item.text == typ:
                 last_widget = item
 
-        self.add_new_widget(file_name, icon)
         self.ids.list.remove_widget(last_widget)
+        self.add_new_widget(file_name, icon)
 
     # downloader function
     def download(self):
@@ -160,9 +150,10 @@ class Kv(MDGridLayout):
         else:
             self.downloading = True
             self.ids.progress_bar.value = 0
+            self.url = self.ids.text_field.text
 
             try:
-                link = self.url.text
+                link = self.url
                 youtube_video = pytube.YouTube(link)
                 youtube_video.register_on_progress_callback(self.loading_bar)
                 youtube_video.register_on_complete_callback(
@@ -279,6 +270,8 @@ class MainApp(MDApp):
     path = str()
 
     def build(self):
+        Builder.load_file('kivy.kv')
+
         if platform == 'android':
             request_permissions(
                 [Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE])
@@ -296,7 +289,7 @@ class MainApp(MDApp):
     def on_start(self):
         # makes the download directory
         try:
-            os.mkdir(self.path, mode=0o000)
+            os.mkdir(self.path) #if no work add mode=0o000
         except:
             pass
 

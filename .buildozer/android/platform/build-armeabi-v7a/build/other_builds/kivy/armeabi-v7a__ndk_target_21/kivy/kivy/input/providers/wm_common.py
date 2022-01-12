@@ -19,9 +19,6 @@ WM_MBUTTONUP = 520
 WM_MBUTTONDBLCLK = 521
 WM_MOUSEWHEEL = 522
 WM_MOUSELAST = 522
-WM_DPICHANGED = 736
-WM_GETDPISCALEDSIZE = 740
-WM_NCCALCSIZE = 131
 
 WM_TOUCH = 576
 TOUCHEVENTF_MOVE = 1
@@ -154,9 +151,3 @@ if 'KIVY_DOC' not in os.environ:
 
     windll.user32.ClientToScreen.restype = BOOL
     windll.user32.ClientToScreen.argtypes = [HWND, POINTER(POINT)]
-
-    try:
-        windll.user32.GetDpiForWindow.restype = UINT
-        windll.user32.GetDpiForWindow.argtypes = [HWND]
-    except AttributeError:
-        pass

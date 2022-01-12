@@ -317,7 +317,7 @@ class Widget(WidgetBase):
     .. versionchanged:: 1.0.9
         Everything related to event properties has been moved to the
         :class:`~kivy.event.EventDispatcher`. Event properties can now be used
-        when constructing a simple class without subclassing :class:`Widget`.
+        when contructing a simple class without subclassing :class:`Widget`.
 
     .. versionchanged:: 1.5.0
         The constructor now accepts on_* arguments to automatically bind
@@ -683,17 +683,12 @@ class Widget(WidgetBase):
         .. versionchanged:: 1.8.0
             The `children` argument can be used to specify the children you
             want to remove.
-        .. versionchanged:: 2.1.0
-
-            Specifying an empty ``children`` list leaves the widgets unchanged.
-            Previously it was treated like ``None`` and all children were
-            removed.
         '''
-        if children is None or children is self.children:
-            children = self.children[:]
 
+        if not children:
+            children = self.children
         remove_widget = self.remove_widget
-        for child in children:
+        for child in children[:]:
             remove_widget(child)
 
     def export_to_png(self, filename, *args, **kwargs):
@@ -725,7 +720,7 @@ class Widget(WidgetBase):
 
                 .. versionadded:: 1.11.0
         '''
-        self.export_as_image(*args, **kwargs).save(filename, flipped=False)
+        self.export_as_image().save(filename, flipped=False)
 
     def export_as_image(self, *args, **kwargs):
         '''Return an core :class:`~kivy.core.image.Image` of the actual
@@ -1058,9 +1053,6 @@ class Widget(WidgetBase):
         Keep in mind that the `width` property is subject to layout logic and
         that this has not yet happened at the time of the widget's `__init__`
         method.
-
-    .. warning::
-        A negative width is not supported.
     '''
 
     height = NumericProperty(100)
@@ -1073,9 +1065,6 @@ class Widget(WidgetBase):
         Keep in mind that the `height` property is subject to layout logic and
         that this has not yet happened at the time of the widget's `__init__`
         method.
-
-    .. warning::
-        A negative height is not supported.
     '''
 
     pos = ReferenceListProperty(x, y)
@@ -1100,7 +1089,7 @@ class Widget(WidgetBase):
 
     right = AliasProperty(get_right, set_right,
                           bind=('x', 'width'),
-                          cache=True, watch_before_use=False)
+                          cache=True)
     '''Right position of the widget.
 
     :attr:`right` is an :class:`~kivy.properties.AliasProperty` of
@@ -1115,7 +1104,7 @@ class Widget(WidgetBase):
 
     top = AliasProperty(get_top, set_top,
                         bind=('y', 'height'),
-                        cache=True, watch_before_use=False)
+                        cache=True)
     '''Top position of the widget.
 
     :attr:`top` is an :class:`~kivy.properties.AliasProperty` of
@@ -1130,7 +1119,7 @@ class Widget(WidgetBase):
 
     center_x = AliasProperty(get_center_x, set_center_x,
                              bind=('x', 'width'),
-                             cache=True, watch_before_use=False)
+                             cache=True)
     '''X center position of the widget.
 
     :attr:`center_x` is an :class:`~kivy.properties.AliasProperty` of
@@ -1145,7 +1134,7 @@ class Widget(WidgetBase):
 
     center_y = AliasProperty(get_center_y, set_center_y,
                              bind=('y', 'height'),
-                             cache=True, watch_before_use=False)
+                             cache=True)
     '''Y center position of the widget.
 
     :attr:`center_y` is an :class:`~kivy.properties.AliasProperty` of
@@ -1455,7 +1444,7 @@ class Widget(WidgetBase):
         for c in self.children:
             c.dec_disabled(count)
 
-    disabled = AliasProperty(get_disabled, set_disabled, watch_before_use=False)
+    disabled = AliasProperty(get_disabled, set_disabled)
     '''Indicates whether this widget can interact with input or not.
 
     :attr:`disabled` is an :class:`~kivy.properties.AliasProperty` and

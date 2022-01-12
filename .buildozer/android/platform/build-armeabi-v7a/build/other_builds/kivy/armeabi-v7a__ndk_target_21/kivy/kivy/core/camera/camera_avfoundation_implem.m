@@ -5,6 +5,7 @@
  *
  * TODO:
  * - add interface for setting some capabilities as focus/exposure/...
+ * - add interface for setting orientation
  * I've let the code concerning caps, even if it's not yet used. uncomment
  * WITH_CAMERA_CAPS to compile with it.
  */
@@ -136,10 +137,9 @@ public:
     int startCaptureDevice();
     void stopCaptureDevice();
     bool attemptFrameRateSelection(int desiredFrameRate);
-    bool attemptCapturePreset(NSString *preset);
+    bool attemptCapturePreset(AVCaptureSessionPreset preset);
     bool attemptStartMetadataAnalysis();
     bool haveNewMetadata();
-    bool setVideoOrientation(int orientation);
 
 #ifdef WITH_CAMERA_CAPS
     double getProperty(int property_id);
@@ -214,29 +214,24 @@ Camera::Camera(int _cameraNum, int _width, int _height) {
 }
 
 Camera::~Camera() {
-    if(started){
-        stopCaptureDevice();
-    }
+    stopCaptureDevice();
 }
 
 bool Camera::grabFrame(double timeOut) {
-    
+
     NSAutoreleasePool* localpool = [[NSAutoreleasePool alloc] init];
-    bool haveFrame = false;
     double sleepTime = 0.005;
     double total = 0;
     NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:sleepTime];
-    haveFrame = [capture updateImage];
-    while (!haveFrame && (total += sleepTime)<=timeOut &&
+    [capture updateImage];
+    while (![capture updateImage] && (total += sleepTime)<=timeOut &&
             [[NSRunLoop currentRunLoop] runMode: NSDefaultRunLoopMode
-            beforeDate:loopUntil]){
-        haveFrame = [capture updateImage];
+            beforeDate:loopUntil])
         loopUntil = [NSDate dateWithTimeIntervalSinceNow:sleepTime];
-    }
 
     [localpool drain];
 
-    return haveFrame;
+    return total <= timeOut;
 }
 
 CameraFrame* Camera::retrieveFrame() {
@@ -299,7 +294,7 @@ bool Camera::attemptFrameRateSelection(int desiredFrameRate){
     return isFPSSupported;
 }
 
-bool Camera::attemptCapturePreset(NSString *preset){
+bool Camera::attemptCapturePreset(AVCaptureSessionPreset preset){
     // See available presets: https://developer.apple.com/documentation/avfoundation/avcapturesessionpreset
     if([mCaptureSession canSetSessionPreset: preset]){
         [mCaptureSession setSessionPreset: preset];
@@ -398,7 +393,7 @@ int Camera::startCaptureDevice() {
         /* By default, We're using the AVCaptureSessionPresetHigh preset for capturing frames on both iOS and MacOS.
            The user can override these settings by calling the attemptCapturePreset() function
         */
-        attemptCapturePreset(@"AVCaptureSessionPresetHigh");
+        attemptCapturePreset(AVCaptureSessionPresetHigh);
 
         [mCaptureSession addInput:mCaptureDeviceInput];
         [mCaptureSession addOutput:mCaptureDecompressedVideoOutput];
@@ -413,9 +408,7 @@ int Camera::startCaptureDevice() {
 #endif
         [conn setVideoOrientation:default_orientation];
 
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [mCaptureSession startRunning];
-        });
+        [mCaptureSession startRunning];
         [localpool drain];
 
         started = 1;
@@ -424,13 +417,6 @@ int Camera::startCaptureDevice() {
 
     [localpool drain];
     return 0;
-}
-
-bool Camera::setVideoOrientation(int orientation) {
-    AVCaptureConnection *conn = [mCaptureDecompressedVideoOutput connectionWithMediaType:AVMediaTypeVideo];
-    if([conn isVideoOrientationSupported]){
-        [conn setVideoOrientation:(AVCaptureVideoOrientation) orientation];
-    }
 }
 
 #ifdef WITH_CAMERA_CAPS
@@ -640,15 +626,14 @@ fromConnection:(AVCaptureConnection *)connection{
         if (image == NULL)
             image = new CameraFrame((int)width, (int)height);
 
-        image->width = width;
-        image->height = height;
-        image->rowsize = (unsigned int)rowsize;
-
         if (image->datasize != width * height * sizeof(char) * 4) {
+            image->width = width;
+            image->height = height;
             image->datasize = (unsigned int)(width * height * sizeof(char) * 4);
             if (image->data != NULL)
                 free(image->data);
             image->data = (char *)malloc(image->datasize);
+            image->rowsize = (unsigned int)rowsize;
         }
 
         if (image->rowsize == width * 4)
@@ -696,8 +681,8 @@ void avf_camera_deinit(camera_t camera) {
     delete (Camera *)(camera);
 }
 
-bool avf_camera_update(camera_t camera) {
-    return ((Camera *)camera)->grabFrame(0);
+void avf_camera_update(camera_t camera) {
+    ((Camera *)camera)->grabFrame(0);
 }
 
 void avf_camera_get_image(camera_t camera, int *width, int *height, int *rowsize, char **data) {
@@ -717,7 +702,7 @@ bool avf_camera_attempt_framerate_selection(camera_t camera, int fps){
 }
 
 bool avf_camera_attempt_capture_preset(camera_t camera, char *preset){
-    NSString *capture_preset = [NSString stringWithUTF8String:preset];
+    AVCaptureSessionPreset capture_preset = (AVCaptureSessionPreset)[NSString stringWithUTF8String:preset];
     NSLog(@"Preset: %@", capture_preset);
     return ((Camera *)camera)->attemptCapturePreset(capture_preset);
 }
@@ -734,9 +719,5 @@ void avf_camera_get_metadata(camera_t camera, char **metatype, char **data) {
 
 bool avf_camera_have_new_metadata(camera_t camera){
     return ((Camera *)camera)->haveNewMetadata();
-}
-
-bool avf_camera_set_video_orientation(camera_t camera, int orientation){
-    return ((Camera *)camera)->setVideoOrientation(orientation);
 }
 

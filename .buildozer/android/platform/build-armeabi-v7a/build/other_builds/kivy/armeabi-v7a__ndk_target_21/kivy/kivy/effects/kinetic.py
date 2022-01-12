@@ -59,21 +59,21 @@ class KineticEffect(EventDispatcher):
     friction = NumericProperty(0.05)
     '''Friction to apply on the velocity
 
-    :attr:`friction` is a :class:`~kivy.properties.NumericProperty` and
+    :attr:`velocity` is a :class:`~kivy.properties.NumericProperty` and
     defaults to 0.05.
     '''
 
     value = NumericProperty(0)
     '''Value (during the movement and computed) of the effect.
 
-    :attr:`value` is a :class:`~kivy.properties.NumericProperty` and
+    :attr:`velocity` is a :class:`~kivy.properties.NumericProperty` and
     defaults to 0.
     '''
 
     is_manual = BooleanProperty(False)
     '''Indicate if a movement is in progress (True) or not (False).
 
-    :attr:`is_manual` is a :class:`~kivy.properties.BooleanProperty` and
+    :attr:`velocity` is a :class:`~kivy.properties.BooleanProperty` and
     defaults to False.
     '''
 
@@ -84,7 +84,6 @@ class KineticEffect(EventDispatcher):
     :attr:`max_history` is a :class:`~kivy.properties.NumericProperty` and
     defaults to 5.
     '''
-
     min_distance = NumericProperty(.1)
     '''The minimal distance for a movement to have nonzero velocity.
 

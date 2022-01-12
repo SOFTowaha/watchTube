@@ -5,7 +5,7 @@ Create a package for IOS
 
 .. note::
 
-    Currently, kivy-iOS builds packages with Python 3.8.x
+    Currently, kivy-iOS builds packages with Python 3.7.
 
 The overall process for creating a package for IOS can be explained in 4 steps:
 
@@ -139,8 +139,8 @@ We managed to merge the app binary with all the libraries into a single binary,
 called libpython. This means all binary modules are loaded beforehand, so
 nothing is dynamically loaded.
 
-Have you already submitted a Kivy application to the App store?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Have you already submited a Kivy application to the App store?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Yes, check:
 

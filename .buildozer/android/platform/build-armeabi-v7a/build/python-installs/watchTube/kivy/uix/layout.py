@@ -88,21 +88,21 @@ class Layout(Widget):
         '''
         raise NotImplementedError('Must be implemented in subclasses.')
 
-    def add_widget(self, widget, *args, **kwargs):
+    def add_widget(self, widget, index=0, canvas=None):
         fbind = widget.fbind
         fbind('size', self._trigger_layout)
         fbind('size_hint', self._trigger_layout)
         fbind('size_hint_max', self._trigger_layout)
         fbind('size_hint_min', self._trigger_layout)
-        super(Layout, self).add_widget(widget, *args, **kwargs)
+        return super(Layout, self).add_widget(widget, index, canvas)
 
-    def remove_widget(self, widget, *args, **kwargs):
+    def remove_widget(self, widget):
         funbind = widget.funbind
         funbind('size', self._trigger_layout)
         funbind('size_hint', self._trigger_layout)
         funbind('size_hint_max', self._trigger_layout)
         funbind('size_hint_min', self._trigger_layout)
-        super(Layout, self).remove_widget(widget, *args, **kwargs)
+        return super(Layout, self).remove_widget(widget)
 
     def layout_hint_with_bounds(
             self, sh_sum, available_space, min_bounded_size, sh_min_vals,

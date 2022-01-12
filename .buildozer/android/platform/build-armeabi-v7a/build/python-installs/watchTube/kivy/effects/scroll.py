@@ -25,13 +25,13 @@ from kivy.properties import NumericProperty, ObjectProperty
 
 
 class ScrollEffect(KineticEffect):
-    '''ScrollEffect class. See the module documentation for more information.
+    '''ScrollEffect class. See the module documentation for more informations.
     '''
 
     drag_threshold = NumericProperty('20sp')
     '''Minimum distance to travel before the movement is considered as a drag.
 
-    :attr:`drag_threshold` is a :class:`~kivy.properties.NumericProperty` and
+    :attr:`velocity` is a :class:`~kivy.properties.NumericProperty` and
     defaults to 20sp.
     '''
 
