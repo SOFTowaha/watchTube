@@ -4,7 +4,8 @@ YouTube Downloader app for android smartphones
 
 ### IMAGES
 
-![alt Screenshot](https://github.com/5KRC1/README-assets/blob/master/images/watchTube_screenshot.png)
+<!-- ![alt Screenshot](https://github.com/5KRC1/README-assets/blob/master/images/watchTube_screenshot.png) -->
+<img src="https://github.com/5KRC1/README-assets/blob/master/images/watchTube_screenshot.png" style="height: 300px;">
 
 ### INSTALLATION
 
