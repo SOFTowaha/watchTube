@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">watchTube</string>
-    <string name="private_version">709bec7ed533bb3bc13955dbe78e26079623c4cf</string>
+    <string name="private_version">eb54d380f6676c25e03ceca1992d16342a975921</string>
     <string name="presplash_color">#FFFFFF</string>
     <string name="urlScheme">kivy</string>
 </resources>

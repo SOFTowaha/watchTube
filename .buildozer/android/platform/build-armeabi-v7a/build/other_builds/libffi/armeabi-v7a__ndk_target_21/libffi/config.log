@@ -1070,7 +1070,7 @@ configure:18392: $? = 0
 configure:18392: result: yes
 configure:18398: checking for mkostemp
 configure:18398: /usr/bin/ccache /home/skrci/.buildozer/android/platform/android-ndk-r19c/toolchains/llvm/prebuilt/linux-x86_64/bin/clang -target armv7a-linux-androideabi21 -fomit-frame-pointer -march=armv7-a -mfloat-abi=softfp -mfpu=vfp -mthumb -fPIC -o conftest -O3 -Wall -fexceptions -DANDROID -D__ANDROID_API__=21 -I/home/skrci/.buildozer/android/platform/android-ndk-r19c/sysroot/usr/include/arm-linux-androideabi -I/home/skrci/Projects/Python/Kivy/ytDownloader/.buildozer/android/platform/build-armeabi-v7a/build/python-installs/watchTube/include/python3.8   -L/home/skrci/Projects/Python/Kivy/ytDownloader/.buildozer/android/platform/build-armeabi-v7a/build/libs_collections/watchTube/armeabi-v7a conftest.c  >&5
-/tmp/conftest-597fbf.o:conftest.c:function main: error: undefined reference to 'mkostemp'
+/tmp/conftest-12b64a.o:conftest.c:function main: error: undefined reference to 'mkostemp'
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:18398: $? = 1
 configure: failed program was:

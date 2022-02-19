@@ -31,7 +31,7 @@ if platform == 'android':
 ANDROID_PATH = f'{str(primary_external_storage_path())}/watchTube/'
 
 # characters you dont want in your title
-SPECIAL_CHARACTERS = '"\'.-#:;$!@$()[]{,}<>€+-?/\\%&*~`|'
+SPECIAL_CHARACTERS = '"\'.-#:;$!@$()[]{,}<>€+-?/\\%&*~`|^'
 
 
 # ===send notifications===
@@ -81,8 +81,10 @@ def check_files(path, title, content):
 # ===Video download function===
 def start_download_video(video, directory):
     # downloads video
-    video.streams.get_by_itag(22).download(
-        f'{directory}', filename=create_title(video.title) + '.mp4')
+    Clock.schedule_once(
+        video.streams.get_by_itag(22).download(
+            f'{directory}', filename=create_title(video.title) + '.mp4'), 1
+    )
 
 
 # ===Audio download function===
@@ -152,60 +154,68 @@ class Kv(MDGridLayout):
             self.ids.progress_bar.value = 0
             self.url = self.ids.text_field.text
 
-            try:
-                link = self.url
-                youtube_video = pytube.YouTube(link)
-                youtube_video.register_on_progress_callback(self.loading_bar)
-                youtube_video.register_on_complete_callback(
-                    self.completed_download)
+            if self.url:
+                try:
+                    link = self.url
+                    youtube_video = pytube.YouTube(link)
+                    youtube_video.register_on_progress_callback(
+                        self.loading_bar)
+                    youtube_video.register_on_complete_callback(
+                        self.completed_download)
 
-                # for android
-                if platform == 'android':
-                    if check_files(ANDROID_PATH, youtube_video.title, self.content_type):
-                        if not self.content_type:
-                            title = create_title(youtube_video.title) + ".mp4"
-                            icon = "download"
-                            self.add_new_widget(title, icon)
+                    # for android
+                    if platform == 'android':
+                        if check_files(ANDROID_PATH, youtube_video.title, self.content_type):
+                            if not self.content_type:
+                                title = create_title(
+                                    youtube_video.title) + ".mp4"
+                                icon = "download"
+                                self.add_new_widget(title, icon)
 
-                            try:
-                                start_download_video(
-                                    youtube_video, ANDROID_PATH)
-                            except:
-                                self.downloading = False
-                                typ = "Video"
+                                try:
+                                    start_download_video(
+                                        youtube_video, ANDROID_PATH)
+                                except Exception as e:
+                                    print("no download")
+                                    self.downloading = False
+                                    typ = "Video"
 
-                                for item in self.ids.list.children:
-                                    if item.secondary_text == title.replace(".mp4", '') and item.text == typ:
-                                        last_widget = item
-                                        self.ids.list.remove_widget(
-                                            last_widget)
+                                    for item in self.ids.list.children:
+                                        if item.secondary_text == title.replace(".mp4", '') and item.text == typ:
+                                            last_widget = item
+                                            self.ids.list.remove_widget(
+                                                last_widget)
+                                    print(e)
+                            else:
+                                title = create_title(
+                                    youtube_video.title) + ".mp3"
+                                icon = "download"
+                                self.add_new_widget(title, icon)
+
+                                try:
+                                    start_download_audio(
+                                        youtube_video, ANDROID_PATH)
+                                except:
+                                    self.downloading = False
+                                    typ = "Music"
+
+                                    for item in self.ids.list.children:
+                                        if item.secondary_text == title.replace(".mp3", '') and item.text == typ:
+                                            last_widget = item
+                                            self.ids.list.remove_widget(
+                                                last_widget)
                         else:
-                            title = create_title(youtube_video.title) + ".mp3"
-                            icon = "download"
-                            self.add_new_widget(title, icon)
+                            send_notification(
+                                'Already Downloaded', 'File already exists!')
 
-                            try:
-                                start_download_audio(
-                                    youtube_video, ANDROID_PATH)
-                            except:
-                                self.downloading = False
-                                typ = "Music"
-
-                                for item in self.ids.list.children:
-                                    if item.secondary_text == title.replace(".mp3", '') and item.text == typ:
-                                        last_widget = item
-                                        self.ids.list.remove_widget(
-                                            last_widget)
-                    else:
-                        send_notification(
-                            'Already Downloaded', 'File already exists!')
-
-            except Exception as exception:
-                print('\n===============error===============\n')
-                print(exception)
-                print('\n===============error===============\n')
-                self.downloading = False
-                send_notification("Error", "Wrong URL")
+                except Exception as exception:
+                    print('\n===============error===============\n')
+                    print(exception)
+                    print('\n===============error===============\n')
+                    self.downloading = False
+                    send_notification("Error", "Wrong URL")
+            else:
+                print('no url')
 
     # Gets downloaded videos and audios
     def get_downloads(self):
@@ -289,7 +299,7 @@ class MainApp(MDApp):
     def on_start(self):
         # makes the download directory
         try:
-            os.mkdir(self.path) #if no work add mode=0o000
+            os.mkdir(self.path)  # if no work add mode=0o000
         except:
             pass
 

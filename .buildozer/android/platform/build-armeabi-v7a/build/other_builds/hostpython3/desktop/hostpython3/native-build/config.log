@@ -460,7 +460,7 @@ configure:7321: $? = 0
 configure:7334: result: yes
 configure:7549: checking whether pthreads are available without options
 configure:7574: gcc -o conftest    conftest.c  >&5
-/usr/bin/ld: /tmp/cceWJ8q9.o: in function `main':
+/usr/bin/ld: /tmp/ccq6Tjxb.o: in function `main':
 conftest.c:(.text+0x3f): undefined reference to `pthread_create'
 /usr/bin/ld: conftest.c:(.text+0x56): undefined reference to `pthread_detach'
 collect2: error: ld returned 1 exit status
@@ -4365,7 +4365,7 @@ conftest.c: In function 'main':
 conftest.c:79:8: warning: implicit declaration of function 'makedev' [-Wimplicit-function-declaration]
    79 | return makedev(0, 0);
       |        ^~~~~~~
-/usr/bin/ld: /tmp/ccWFYK2P.o: in function `main':
+/usr/bin/ld: /tmp/ccskTIh5.o: in function `main':
 conftest.c:(.text+0x14): undefined reference to `makedev'
 collect2: error: ld returned 1 exit status
 configure:8101: $? = 1
@@ -6337,7 +6337,7 @@ configure: failed program was:
 configure:9870: result: no
 configure:9879: checking for library containing sem_init
 configure:9910: gcc -o conftest    conftest.c -ldl  >&5
-/usr/bin/ld: /tmp/ccSNPLO1.o: in function `main':
+/usr/bin/ld: /tmp/ccmu9Osu.o: in function `main':
 conftest.c:(.text+0xa): undefined reference to `sem_init'
 collect2: error: ld returned 1 exit status
 configure:9910: $? = 1
@@ -6628,7 +6628,7 @@ configure:10131: checking for --with-undefined-behavior-sanitizer
 configure:10143: result: no
 configure:10149: checking for t_open in -lnsl
 configure:10174: gcc -o conftest    conftest.c -lnsl  -lpthread -ldl  >&5
-/usr/bin/ld: /tmp/ccaTxb07.o: in function `main':
+/usr/bin/ld: /tmp/cc2oKV9E.o: in function `main':
 conftest.c:(.text+0xa): undefined reference to `t_open'
 collect2: error: ld returned 1 exit status
 configure:10174: $? = 1
@@ -7030,7 +7030,7 @@ configure:11545: $? = 0
 configure:11545: result: yes
 configure:11545: checking for explicit_memset
 configure:11545: gcc -pthread -o conftest    conftest.c -lpthread -ldl  >&5
-/usr/bin/ld: /tmp/cc9wQfDA.o: in function `main':
+/usr/bin/ld: /tmp/cc7p3por.o: in function `main':
 conftest.c:(.text+0xa): undefined reference to `explicit_memset'
 collect2: error: ld returned 1 exit status
 configure:11545: $? = 1
@@ -7235,7 +7235,7 @@ configure:11545: $? = 0
 configure:11545: result: yes
 configure:11545: checking for fdwalk
 configure:11545: gcc -pthread -o conftest    conftest.c -lpthread -ldl  >&5
-/usr/bin/ld: /tmp/ccGYFyRs.o: in function `main':
+/usr/bin/ld: /tmp/cc1mywJy.o: in function `main':
 conftest.c:(.text+0xa): undefined reference to `fdwalk'
 collect2: error: ld returned 1 exit status
 configure:11545: $? = 1
@@ -7548,7 +7548,7 @@ configure:11545: $? = 0
 configure:11545: result: yes
 configure:11545: checking for getwd
 configure:11545: gcc -pthread -o conftest    conftest.c -lpthread -ldl  >&5
-/usr/bin/ld: /tmp/ccmaR9EF.o: in function `main':
+/usr/bin/ld: /tmp/ccDpUepo.o: in function `main':
 conftest.c:(.text+0xa): warning: the `getwd' function is dangerous and should not be used.
 configure:11545: $? = 0
 configure:11545: result: yes
@@ -7654,7 +7654,7 @@ configure:11545: $? = 0
 configure:11545: result: yes
 configure:11545: checking for plock
 configure:11545: gcc -pthread -o conftest    conftest.c -lpthread -ldl  >&5
-/usr/bin/ld: /tmp/cchUOGOC.o: in function `main':
+/usr/bin/ld: /tmp/ccfgP2Ni.o: in function `main':
 conftest.c:(.text+0xa): undefined reference to `plock'
 collect2: error: ld returned 1 exit status
 configure:11545: $? = 1
@@ -7936,7 +7936,7 @@ configure:11545: $? = 0
 configure:11545: result: yes
 configure:11545: checking for pthread_init
 configure:11545: gcc -pthread -o conftest    conftest.c -lpthread -ldl  >&5
-/usr/bin/ld: /tmp/ccYw2T61.o: in function `main':
+/usr/bin/ld: /tmp/cctZZYZf.o: in function `main':
 conftest.c:(.text+0xa): undefined reference to `pthread_init'
 collect2: error: ld returned 1 exit status
 configure:11545: $? = 1
@@ -8387,7 +8387,7 @@ configure:11545: $? = 0
 configure:11545: result: yes
 configure:11545: checking for strlcpy
 configure:11545: gcc -pthread -o conftest    conftest.c -lpthread -ldl  >&5
-/usr/bin/ld: /tmp/ccpVyPyM.o: in function `main':
+/usr/bin/ld: /tmp/ccTGENM3.o: in function `main':
 conftest.c:(.text+0xa): undefined reference to `strlcpy'
 collect2: error: ld returned 1 exit status
 configure:11545: $? = 1
@@ -8712,7 +8712,7 @@ configure:11545: $? = 0
 configure:11545: result: yes
 configure:11545: checking for tempnam
 configure:11545: gcc -pthread -o conftest    conftest.c -lpthread -ldl  >&5
-/usr/bin/ld: /tmp/ccCTvqCQ.o: in function `main':
+/usr/bin/ld: /tmp/ccTkG35o.o: in function `main':
 conftest.c:(.text+0xa): warning: the use of `tempnam' is dangerous, better use `mkstemp'
 configure:11545: $? = 0
 configure:11545: result: yes
@@ -8730,13 +8730,13 @@ configure:11545: $? = 0
 configure:11545: result: yes
 configure:11545: checking for tmpnam
 configure:11545: gcc -pthread -o conftest    conftest.c -lpthread -ldl  >&5
-/usr/bin/ld: /tmp/cccVMQJB.o: in function `main':
+/usr/bin/ld: /tmp/ccvbdSro.o: in function `main':
 conftest.c:(.text+0xa): warning: the use of `tmpnam' is dangerous, better use `mkstemp'
 configure:11545: $? = 0
 configure:11545: result: yes
 configure:11545: checking for tmpnam_r
 configure:11545: gcc -pthread -o conftest    conftest.c -lpthread -ldl  >&5
-/usr/bin/ld: /tmp/ccI0Uqor.o: in function `main':
+/usr/bin/ld: /tmp/ccNiLvSI.o: in function `main':
 conftest.c:(.text+0xa): warning: the use of `tmpnam_r' is dangerous, better use `mkstemp'
 configure:11545: $? = 0
 configure:11545: result: yes
@@ -8802,7 +8802,7 @@ configure:11545: $? = 0
 configure:11545: result: yes
 configure:11545: checking for _getpty
 configure:11545: gcc -pthread -o conftest    conftest.c -lpthread -ldl  >&5
-/usr/bin/ld: /tmp/cciJSGuZ.o: in function `main':
+/usr/bin/ld: /tmp/ccKl0ONE.o: in function `main':
 conftest.c:(.text+0xa): undefined reference to `_getpty'
 collect2: error: ld returned 1 exit status
 configure:11545: $? = 1
@@ -9130,7 +9130,7 @@ configure: failed program was:
 configure:11545: result: no
 configure:11545: checking for rtpSpawn
 configure:11545: gcc -pthread -o conftest    conftest.c -lpthread -ldl  >&5
-/usr/bin/ld: /tmp/ccb9OrwF.o: in function `main':
+/usr/bin/ld: /tmp/ccirW6CL.o: in function `main':
 conftest.c:(.text+0xa): undefined reference to `rtpSpawn'
 collect2: error: ld returned 1 exit status
 configure:11545: $? = 1
@@ -10154,7 +10154,7 @@ conftest.c: In function 'main':
 conftest.c:301:6: warning: implicit declaration of function 'chflags' [-Wimplicit-function-declaration]
   301 |   if(chflags(argv[0], 0) != 0)
       |      ^~~~~~~
-/usr/bin/ld: /tmp/cckVJ8UZ.o: in function `main':
+/usr/bin/ld: /tmp/cc8xRj9n.o: in function `main':
 conftest.c:(.text+0x24): warning: chflags is not implemented and will always fail
 configure:12208: $? = 0
 configure:12208: ./conftest
@@ -10473,7 +10473,7 @@ conftest.c: In function 'main':
 conftest.c:301:6: warning: implicit declaration of function 'lchflags' [-Wimplicit-function-declaration]
   301 |   if(lchflags(argv[0], 0) != 0)
       |      ^~~~~~~~
-/usr/bin/ld: /tmp/ccTaE0CD.o: in function `main':
+/usr/bin/ld: /tmp/ccT8i4Z6.o: in function `main':
 conftest.c:(.text+0x24): undefined reference to `lchflags'
 collect2: error: ld returned 1 exit status
 configure:12257: $? = 1
@@ -10807,7 +10807,7 @@ configure:12455: $? = 0
 configure:12459: result: yes
 configure:12472: checking for openpty
 configure:12472: gcc -pthread -o conftest    conftest.c -lpthread -ldl  >&5
-/usr/bin/ld: /tmp/ccq9nHDO.o: in function `main':
+/usr/bin/ld: /tmp/ccpyWesC.o: in function `main':
 conftest.c:(.text+0xa): undefined reference to `openpty'
 collect2: error: ld returned 1 exit status
 configure:12472: $? = 1
@@ -11161,7 +11161,7 @@ configure:12569: $? = 0
 configure:12569: result: yes
 configure:12669: checking for fseek64
 configure:12669: gcc -pthread -o conftest    conftest.c -lpthread -ldl  -lutil >&5
-/usr/bin/ld: /tmp/ccMLvdFA.o: in function `main':
+/usr/bin/ld: /tmp/ccXKMHOD.o: in function `main':
 conftest.c:(.text+0xa): undefined reference to `fseek64'
 collect2: error: ld returned 1 exit status
 configure:12669: $? = 1
@@ -11517,7 +11517,7 @@ configure:12669: $? = 0
 configure:12669: result: yes
 configure:12669: checking for ftell64
 configure:12669: gcc -pthread -o conftest    conftest.c -lpthread -ldl  -lutil >&5
-/usr/bin/ld: /tmp/ccO8tFqA.o: in function `main':
+/usr/bin/ld: /tmp/ccCk9Y55.o: in function `main':
 conftest.c:(.text+0xa): undefined reference to `ftell64'
 collect2: error: ld returned 1 exit status
 configure:12669: $? = 1
@@ -12555,7 +12555,7 @@ configure:12780: gcc -pthread -c   conftest.c >&5
 configure:12780: $? = 0
 configure:12796: checking for library containing crypt
 configure:12827: gcc -pthread -o conftest    conftest.c -lpthread -ldl  -lutil >&5
-/usr/bin/ld: /tmp/ccoCJI1d.o: in function `main':
+/usr/bin/ld: /tmp/cc3l0iHW.o: in function `main':
 conftest.c:(.text+0xa): undefined reference to `crypt'
 collect2: error: ld returned 1 exit status
 configure:12827: $? = 1
@@ -19949,7 +19949,7 @@ configure:16985: $? = 0
 configure:16992: result: yes
 configure:17005: checking for library containing shm_open
 configure:17036: gcc -pthread -o conftest    conftest.c -lcrypt -lpthread -ldl  -lutil -lm >&5
-/usr/bin/ld: /tmp/ccrlImx0.o: in function `main':
+/usr/bin/ld: /tmp/cclrukbF.o: in function `main':
 conftest.c:(.text+0xa): undefined reference to `shm_open'
 collect2: error: ld returned 1 exit status
 configure:17036: $? = 1
