@@ -18,6 +18,26 @@ git clone https://github.com/5KRC1/watchTube/bin/watchTube-0.1-armeabi-v7a-debug
 
 Then you somehow (via bluetooth or usb) transfer this cloned file onto your android smartphone. Once you open the file and install the app, it should appear as an android app in your application drawer.
 
+#### If you want to edit or run from your computer
+
+Clone repo with 
+
+```bash
+git clone https://github.com/5KRC1/watchTube
+```
+
+then install requirements
+
+```bash
+pip install -r rquirements.txt
+```
+
+and run buildozer with
+
+```bash
+buildozer android debug deploy run
+```
+
 ### BLOG
 
 [watchTube](https://dasadweb.tk/)
@@ -28,3 +48,7 @@ Then you somehow (via bluetooth or usb) transfer this cloned file onto your andr
 
 ### STATUS
 Working. If you find any issues make sure to contact me, thanks.
+
+### TODO
+
+- Downloads disappear from list after download
