@@ -27,4 +27,4 @@ Then you somehow (via bluetooth or usb) transfer this cloned file onto your andr
 - None
 
 ### STATUS
-Not working, since pytube has some issues. Waiting for the issues to be resolved.
+Working. If you find any issues make sure to contact me, thanks.
