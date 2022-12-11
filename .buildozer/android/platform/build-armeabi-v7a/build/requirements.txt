@@ -1,0 +1,4 @@
+certifi
+kivymd==1.0.2
+plyer
+pytube

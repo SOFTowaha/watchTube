@@ -52,3 +52,4 @@ Working. If you find any issues make sure to contact me, thanks.
 ### TODO
 
 - Downloads disappear from list after download
+- Add playlist downloads
