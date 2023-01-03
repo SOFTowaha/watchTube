@@ -48,7 +48,7 @@ presplash.filename = %(source.dir)s/assets/SplashScreen.png
 
 # (str) Icon of the application
 #icon.filename = %(source.dir)s/data/icon.png
-icon.filename = %(source.dir)s/assets/watchTube-Icon.png
+#icon.filename = %(source.dir)s/assets/watchTube-Icon.png
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
 orientation = portrait
@@ -93,6 +93,9 @@ android.presplash_color = #FFFFFF
 # (str) Adaptive icon of the application (used if Android API level is 26+ at runtime)
 #icon.adaptive_foreground.filename = %(source.dir)s/data/icon_fg.png
 #icon.adaptive_background.filename = %(source.dir)s/data/icon_bg.png
+icon.adaptive_foreground.filename = %(source.dir)s/assets/watchTube-Icon.png
+icon.adaptive_background.filename = %(source.dir)s/assets/watchTube-Icon.png
+
 
 # (list) Permissions
 android.permissions = INTERNET,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE,MANAGE_DOCUMENTS

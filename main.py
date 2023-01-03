@@ -237,15 +237,10 @@ class MainApp(MDApp):
         '''builds Kivy GUI and manages permissions'''
         if platform == 'android':
             request_permissions([Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE])
-            try:
-                os.mkdir(PATH)
-            except:
-                pass
-        else:
-            try:
-                os.mkdir(PATH)
-            except:
-                pass
+        try:
+            os.mkdir(PATH)
+        except:
+            pass
 
         # sets theme
         self.theme_cls.theme_style = 'Light'

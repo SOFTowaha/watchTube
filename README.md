@@ -6,36 +6,51 @@ YouTube Downloader app for android smartphones
 
 ### IMAGES
 
-<img src="https://github.com/5KRC1/5KRC1/blob/main/images/watchTube/watchtube-screenshot.png" style="height: 300px;">
+![TRIM_20230103_165609](https://user-images.githubusercontent.com/68738873/210394707-6afb49f9-5944-49a8-8289-df5f2ea5362a.gif)
 
 ### INSTALLATION
 
-Use the following command to download the apk.
+#### Android
+
+This application is available to download [here](https://api.dasadweb.tk/files/watchTube.apk).
+
+#### PC
+App runs on linux (not tested elsewhere) but might not work as well as on Android.
+
+1. Clone repo:
 
 ```bash
-git clone https://github.com/5KRC1/watchTube/bin/watchTube-0.1-armeabi-v7a-debug.apk
+git clone https://github.com/5KRC1/watchTube && cd watchTube
 ```
 
-Then you somehow (via bluetooth or usb) transfer this cloned file onto your android smartphone. Once you open the file and install the app, it should appear as an android app in your application drawer.
-
-#### If you want to edit or run from your computer
-
-Clone repo with 
-
+2. (ptional) Run venv:
 ```bash
-git clone https://github.com/5KRC1/watchTube
+# to crate and start
+python -m venv env && source env/bin/activate
+
+# to stop
+deactivate
 ```
 
-then install requirements
+3. Install requirements:
 
 ```bash
 pip install -r rquirements.txt
 ```
 
-and run buildozer with
+#### Buildozer (Android)
+4. Connect your phone (Enable ADB Debugging!)
+
+5. Run Buildozer:
 
 ```bash
 buildozer android debug deploy run
+```
+
+#### Python (PC)
+4. Run app:
+```bash
+python main.py
 ```
 
 ### BLOG
@@ -44,12 +59,11 @@ buildozer android debug deploy run
 
 ### UPDATES
 
-- None
+- Updated GUI
 
 ### STATUS
 Working. If you find any issues make sure to contact me, thanks.
 
 ### TODO
 
-- Downloads disappear from list after download
 - Add playlist downloads
