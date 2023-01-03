@@ -6,7 +6,7 @@ YouTube Downloader app for android smartphones
 
 ### IMAGES
 
-<img src="https://user-images.githubusercontent.com/68738873/210394707-6afb49f9-5944-49a8-8289-df5f2ea5362a.gif" height="300"/>
+<img src="https://user-images.githubusercontent.com/68738873/210394707-6afb49f9-5944-49a8-8289-df5f2ea5362a.gif" height="450"/>
 
 ### INSTALLATION
 
